@@ -20,9 +20,12 @@ hspi = SPI(1, baudrate=1000000, polarity=0, phase=0)
 
 a = 0
 while True:
-	latch.value(0)
-	hspi.write(bytearray([a]))
-	latch.value(1)
-	a += 1
-	utime.sleep_ms(50)
+	while a < 256:
+		latch.value(0)
+		hspi.write(bytearray([a]))
+		latch.value(1)
+		a += 1
+		utime.sleep_ms(50)
+	a = 0
+	
 	
