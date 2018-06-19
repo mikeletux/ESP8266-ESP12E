@@ -1,9 +1,9 @@
-############################################
-# SN74HC595 with hardware SPI ESP12-E      #
-# Simple 8 LED shifter proof of concept    #
-# Author: Miguel Sama                      #
-# Date: 18/06/2018                         #
-############################################
+#################################################
+# SN74HC595 with hardware SPI ESP12-E           #
+# Sums up 1 bit by 1 bit till 255 is reached    #
+# Author: Miguel Sama                           #
+# Date: 18/06/2018                              #
+#################################################
 
 from machine import Pin, SPI
 import utime
