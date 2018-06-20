@@ -1,0 +1,23 @@
+Main
+	Set HSPI and SPI to control shift registers SN74HC595
+	Interrupt_variable -> False
+	Shift_text_constant = 12 
+	Shift_text_counter = 0 (Every time the screen needs to be refreshed, this will be increased by one. When Shift_text_constant is reached, text will shift one led column to the left.)
+	Create screen object s
+	s.fromStringToHexBuffer()
+	Timer(20ms, fuction -> timer_handler)
+	while True:
+		if Interrupt_variable == True
+			refresh_screen()
+			Interrupt_variable = False
+			if Shift_text_counter == Shift_text_constant
+				s.shift_text()
+				Shift_text_counter = 0
+				
+	function timer_handler()
+		Interrupt_variable = True
+		Shift_text_counter += 1
+	
+
+	
+This algorithm will be much efficient using semaphores/mutex
