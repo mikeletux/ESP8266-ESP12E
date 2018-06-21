@@ -5,7 +5,9 @@ class Screen:
 	def __init__(self,width,messageToShow):
 		self.height = 8 #No support for different height led matrix for now
 		self.width = width
-		screen = array('H', [0x0] * width)
+		self.messageLength = 0 #This needs to be initialyzed
+		self.offset = 0
+		self.screen = array('H', [0x0] * width)
 		self.messageToShow = messageToShow
 		self.messageToShowHex = array('H', [])
 	
@@ -24,7 +26,35 @@ class Screen:
 				self.messageToShowHex.append(0x00) #Putting a line of space in buffer
 				if specialCharacter:
 					specialCharacter = False
+		self.messageLength = len(self.messageToShowHex) #We initialize messageToShow len
+	
+	def clearScreen(self):
+		self.screen = array('H', [0x0] * self.width)
 		
+	def crossScreenWithMessage(self):
+		self.clearScreen()
+		if (self.offset - (self.width - 1)) < 0:
+			i = self.offset
+			j =  self.width - 1 #screen offset
+			while i >= 0:
+				self.screen[j] = self.messageToShowHex[i]
+				i -= 1
+				j -= 1
+		elif ( self.offset + self.width ) < self.messageLength:
+			#Here there are no problem as from offset onwards there are no out of bound issue
+			i = self.offset
+			j =  self.width - 1 #screen offset
+			while j >= 0:
+				self.screen[j] = self.messageToShowHex[i]
+				i -= 1
+				j -= 1
+		elif ( self.offset < self.messageLength ) and ( ( self.offset + self.width ) > self.messageLength ):
+			print("To be done...")
+		elif ( self.offset >= self.messageLength ):
+			#We are out of bounds, so no more message to show, just drag the rest of the leds
+			print("To be done...")
+		self.offset += 1
+	
 	@staticmethod
 	def getHexFromLetter(letter):
 		alphabet = {
