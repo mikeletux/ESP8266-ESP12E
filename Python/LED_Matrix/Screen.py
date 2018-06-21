@@ -33,27 +33,41 @@ class Screen:
 		
 	def crossScreenWithMessage(self):
 		self.clearScreen()
+		i = self.offset
+		j =  self.width - 1 #screen offset
+		finish = False
 		if (self.offset - (self.width - 1)) < 0:
-			i = self.offset
-			j =  self.width - 1 #screen offset
 			while i >= 0:
 				self.screen[j] = self.messageToShowHex[i]
 				i -= 1
 				j -= 1
-		elif ( self.offset + self.width ) < self.messageLength:
+		elif self.offset < self.messageLength:
 			#Here there are no problem as from offset onwards there are no out of bound issue
-			i = self.offset
-			j =  self.width - 1 #screen offset
 			while j >= 0:
 				self.screen[j] = self.messageToShowHex[i]
 				i -= 1
 				j -= 1
-		elif ( self.offset < self.messageLength ) and ( ( self.offset + self.width ) > self.messageLength ):
-			print("To be done...")
 		elif ( self.offset >= self.messageLength ):
 			#We are out of bounds, so no more message to show, just drag the rest of the leds
-			print("To be done...")
-		self.offset += 1
+			while j >= 0:
+				if i >= self.messageLength:
+					self.screen[j] = 0x00 #blank line
+				else:
+					self.screen[j] = self.messageToShowHex[i]
+				i -= 1
+				j -= 1
+			if self.checkIfScreenEmpty():
+				self.offset = 0
+				finish = True
+		if not finish:
+			self.offset += 1
+		
+	def checkIfScreenEmpty(self):
+		empty = True
+		for i in range(self.width):
+			if self.screen[i] != 0:
+				empty = False
+		return empty
 	
 	@staticmethod
 	def getHexFromLetter(letter):
