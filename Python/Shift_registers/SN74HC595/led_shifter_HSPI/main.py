@@ -16,7 +16,7 @@ import utime
 #LSB LED connected to Qa. MSB LED connected to Qh
 
 latch = Pin(15,Pin.OUT)
-hspi = SPI(1, baudrate=1000000, polarity=0, phase=0)
+hspi = SPI(1, baudrate=10000000, polarity=0, phase=0)
 
 a = 1
 while True:
@@ -25,7 +25,7 @@ while True:
 		hspi.write(bytearray([a]))
 		latch.value(1)
 		a = a << 1
-		utime.sleep_ms(50)
+		#utime.sleep_ms(2)
 	a = 1
 	
 	
