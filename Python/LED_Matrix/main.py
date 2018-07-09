@@ -1,4 +1,5 @@
 from Screen import Screen
+from FileHandler import FileHandler
 import machine
 from machine import Pin, SPI, Timer	
 from array import array
@@ -14,15 +15,17 @@ interruptFlag = False
 PIN_OE = 4
 PIN_CS_ROW = 15
 PIN_CS_COL = 5
+FILENAME = 'message.txt'
 
 hspi = SPI(1, baudrate=80000000, polarity=0, phase=0)
 oe = Pin(PIN_OE,Pin.OUT)
 cs_row = Pin(PIN_CS_ROW,Pin.OUT)
 cs_col = Pin(PIN_CS_COL,Pin.OUT)
 
-s = Screen(WIDTH, "Hello World!")
-s.fromStringToHexBuffer()
+f =	FileHandler(FILENAME)
 
+s = Screen(WIDTH, f.getMessageFromFile())
+s.fromStringToHexBuffer()
 
 dragTimer = Timer(0)
 dragTimer.init(period=INTERRUPT_TIME, mode=Timer.PERIODIC, callback=raiseFlag)
