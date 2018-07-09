@@ -11,12 +11,18 @@ WIDTH = 8
 INTERRUPT_TIME = 50
 interruptFlag = False
 
-latch = Pin(15,Pin.OUT)
-hspi = SPI(1, baudrate=1000000, polarity=0, phase=0)
-spi = SPI(-1, baudrate=1000000, polarity=0, phase=0, sck=Pin(5), mosi=Pin(4), miso=Pin(0)) #Maybe with only one SPI can be done...
+PIN_OE = 4
+PIN_CS_ROW = 15
+PIN_CS_COL = 5
 
-s = Screen(WIDTH, "Hello World!")
+hspi = SPI(1, baudrate=80000000, polarity=0, phase=0)
+oe = Pin(PIN_OE,Pin.OUT)
+cs_row = Pin(PIN_CS_ROW,Pin.OUT)
+cs_col = Pin(PIN_CS_COL,Pin.OUT)
+
+s = Screen(WIDTH, "Hello world!")
 s.fromStringToHexBuffer()
+
 
 dragTimer = Timer(0)
 dragTimer.init(period=INTERRUPT_TIME, mode=Timer.PERIODIC, callback=raiseFlag)
@@ -27,10 +33,14 @@ col = 1
 while True:
 	while not interruptFlag:
 		while i < s.width:
-			latch.value(0)
+			cs_row.value(0)
+			cs_col.value(0)
 			hspi.write(bytearray([s.screen[i]]))
-			spi.write(bytearray([col]))
-			latch.value(1)
+			oe.value(1)
+			cs_row.value(1)
+			hspi.write(bytearray([col]))
+			cs_col.value(1)
+			oe.value(0)
 			i += 1
 			col = col << 1
 		i = 0
